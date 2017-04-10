@@ -1,25 +1,22 @@
-6.828-paging-system-project
+CS3210-Final-Project
 ===========================
 
-Final project (implement a paging system for JOS) for MIT 6.828, Fall 2012
+Final project (extend paging system for JOS) for CS3210, Spring 2017
 
-Group members: Gurtej Kanwar (gurtej@mit.edu, @gkanwar), Zixiao Wang (garywang@mit.edu, @Garywang), Jordan Moldow (jmoldow@mit.edu, @jmoldow)
+Team members: Chunyan Bai(cbai32@gatech.edu), Haoye Cai (hcai60@gatech.edu), Yanzhao Wang(ywang3254@gatech.edu)
 
-Group 2
+Team 1
 
 
-Project Title: Paging System
+Project Title: Extend Paging System in JOS
 
 Project Write-up: In README.pdf
 
 -----------------
 Project Proposal:
 
-We would like to implement the paging system (swapping memory pages in and out of disk) for our final project. One of the reasons this particular project was interesting was the possibility of developing an interesting page swapping heuristic to choose optimal pages to swap. There exist some heuristics for these already, such as demand paging, anticipatory paging, etc. We would try to implement a few of these as well as potentially constructing some heuristics of our own. Based on the performance of these, we would try to refine our solutions and ultimately pick one as the final paging heuristic.
+As we know, in JOS, the physical memory is limited to 4GB, which means the needed memory of a single process cannot exceed 4GB. One commonly implemented solution to the problem of limited memory is paging to disk. A paging system swaps memory pages between RAM and disk, allowing a process to use more memory than physically restricted. Since accessing permanent storage is much slower than accessing RAM, it is important for a good paging system to choose the right pages to swap out, or more specifically, to choose those pages that will rarely be used in the future. To accelerate this  swapping process, we will also modify the process scheduler so that it can coordinate with our paging system more smoothly.
 
-In order to test the paging heuristics we would also have to develop a user program that returns some sort of metrics. For this we plan to develop some program that forks several different processes that make varying use of memory. In theory these processes should simulate common memory usage situations so that our heuristic would be optimized for the common cases. We would also try to think of some edge cases that could potentially cause thrashing to test worst case performance.
+Paging to disk is widely used in different operating systems nowadays, and it has become a crucial feature in order to break the memory limit. In Unix and other Unix-like operating systems, it is common to dedicate an entire partition of a hard disk to swapping. Many systems even have an entire hard drive dedicated to swapping, separate from the data drives, containing only a swap partition. In terms of determining pages to be swapped out, which is one of our main focus, there are some existing page swapping selection heuristics, such as demand paging, anticipatory paging, etc.
 
-One tangential consideration is the process scheduler. The pages that are about to be used in the near future depend heavily on which process in user space gets scheduled next. As such, one possible addition to the project would be modifying the existing scheduler and/or paging heuristic to work well together and best choose pages to swap out/in.
-
------------------
-
+We aim to extend the functionality of paging system in JOS, implementing paging to disk so that virtual memory could exceed RAM . Furthermore, we intend to propose a novel paging heuristic in order to increase the performance of paging system, and also explore the influence of process scheduling policy on paging system.
