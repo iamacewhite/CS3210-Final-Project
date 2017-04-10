@@ -1,0 +1,73 @@
+#!/bin/bash
+
+out=$1
+
+# Function to fill kern/init.c
+fill_init ()
+{
+    string=""
+    for x in $@
+    do
+	# Build string
+	string="$string ENV_CREATE(user_$x, ENV_TYPE_USER);" 
+    done
+    echo "fill_init $string"
+    sed -r "s/(#define RUNNING).*/\1 $string/" kern/init.c > tmp.out
+    mv tmp.out kern/init.c
+}
+
+run_qemu ()
+{
+    echo "run_qemu"
+    (make qemu-nox | (
+	pgouts=-1
+	pgins=-1
+	pgrms=-1
+	while read line
+	do
+	    #echo $line
+	    if (echo $line | grep "Total number of page outs: " > /dev/null)
+	    then
+		pgouts=`echo $line | egrep -o "[0-9]+"`
+	    fi
+	    if (echo $line | grep "Total number of page ins: " > /dev/null)
+	    then
+		pgins=`echo $line | egrep -o "[0-9]+"`
+	    fi
+	    if (echo $line | grep "Total number of page removes: " > /dev/null)
+	    then
+		pgrms=`echo $line | egrep -o "[0-9]+"`
+	    fi
+	    if [ $pgins -ne -1 ] && [ $pgouts -ne -1 ] && [ $pgrms -ne -1 ]
+	    then
+		break
+	    fi
+	done
+
+	echo "pgouts: $pgouts, pgins: $pgins, pgrms: $pgrms"
+
+	pkill make
+    )) 2> /dev/null
+}
+
+
+
+# linearpagein
+#fill_init "linearpagein"
+#run_qemu
+
+# randompagein
+#fill_init "randompagein"
+#run_qemu
+
+# reverselinearpagein
+#fill_init "reverselinearpagein"
+#run_qemu
+
+# zigzag
+fill_init "zigzag"
+run_qemu
+
+# linearpageinsmall + reverselinearpageinsmall
+fill_init "linearpageinsmall" "reverselinearpageinsmall"
+run_qemu

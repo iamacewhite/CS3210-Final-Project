@@ -1,0 +1,14 @@
+ * totally different approach (?): find instance in Linux where pager works poorly
+   - linux processes can communicate to kernel
+   - it is complicated
+ * swap to dedicated area of disk (or to FS, but that would require having writable FS, which we haven't done in JOS)
+ * do swapping in xv6?
+ * think about what the demo is going to be
+ * they kept talking about swapping out whole processes instead of just single pages
+ * meeting in a couple weeks around Thanksgiving, should have infastructure up and running by then, better idea of where we're going by then
+   - try implementing in JOS by then?
+   - build system that can allocate n+1 pages, where the limit is n (or something similar to that), would be a good first step
+   - pager is more important piece to start out with, swapper only helps if there are multiple processes
+   - might be weird to have kernel doing this, would be better to have library do it
+     - might not need to expose any new information to user space, can theoretically do this with existing system calls. but can also help to add new stuff.
+     - pre-paging would require exposing number of free pages to user space

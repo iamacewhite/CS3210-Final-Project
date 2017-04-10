@@ -1,0 +1,21 @@
+Meeting (1) on 11/11/12:
+* Implement a swapping server (like file system server)
+* Would use RPCs for swapping in/out pages, use the shared page mapping to send/recv data
+* Swapping server should maintain permissions, so that other envs can't access pages from a given env
+* We should implement a barebones system
+* How to handle PTE_SHARE? For now -- just don't page out these pages
+* Using JOS -- we haven't touched xv6 in over a month, none of us are familiar with Linux kernel code
+* What happens in a program allocates a large block of memory (i.e. int[10000000]?) -- this hits the cap in spawn, which we hope handles it correctly
+* We need to make a PTE flag for swapped out
+
+Barebones target for conference:
+* Paging server env which provides:
+  * Page in
+  * Page out
+* Handling swapped out pages being accessed
+  * Set PTE_P to 0 when swapping out, set PTE_SWAP
+  * Add to the wrappers around all syscalls something that touches any pointer memory, to trigger page faults if the page being referenced is swapped out
+  * Write a page fault handler to swap the page back in
+  * Make this page fault handler play nicely with fork -- set up the upcall code to allow registering multiple page fault handlers which it calls sequentially until one returns true
+* Set up a partition of the HD that is our swap space
+  * We need to make sure the FS server plays nicely with this

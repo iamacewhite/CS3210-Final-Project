@@ -1,0 +1,12 @@
+- Initial paging server and library were written over break
+- Tested with bigmem and we got something that didn't crash (yay!)
+
+Problems:
+- Need to know which user environment referred to which page when we page out the page (so that we can update their mappings). We need to either immediately update their mappings, or update them as needed (trickier it seems).
+  Solution: Don't map out shared pages for now, have a wrapper for any user-defined page choice algorithm that enforces this constraint (and any others we care about)
+
+TODO:
+(1) Paging server still doesn't actually save the page
+(2) How do we store the mapping for paging back in? (And in what step is it stored? Process? Paging server? Hard disk?)
+(3) Library code needs to implement paging back in
+(4) Library code should add a wrapper to enforce constraints on user-defined page choice

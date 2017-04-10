@@ -1,0 +1,37 @@
+Implement paging to disk in xv6 or JOS, so that processes can be bigger than RAM. Extend your pager with swapping. 
+
+
+
+
+
+Implement ideas from the Exokernel papers, for example the packet filter.
+
+Build a virtual machine monitor that can run multiple guests (for example, multiple instances of JOS), using x86 VM support. 
+
+(Soft updates) Use file system ideas from Soft updates, WAFL, ZFS, or another advanced file system.
+
+The linux kernel uses read copy update to be able to perform read operations without holding locks. Explore RCU by implementing it in xv6 and use it to support a name cache with lock-free reads.
+
+Lab 6 (Networking stack)
+
+Implement loadable kernel modules to extend the xv6 kernel to replace or extend subsystems of the xv6 kernel. For example, make the file system a kernel module so that you can add a kernel module to read DOS file systems, or replace the xv6 file system.
+
+
+
+
+
+
+
+
+
+A window system for xv6 or JOS, including graphics driver and mouse. See reference page for some documentation. sqrt(x) is an example JOS window system (and writeup). 
+
+(boring) Fix xv6 logging to support concurrent transactions, and generally have higher performance, perhaps taking ideas from Linux EXT3.
+
+Implement capabilities to provide fine-grained control over what privileges processes have. 
+
+Modify xv6 to have kernel-supported threads inside processes. See in-class uthread assignment to get started. Implementing scheduler activations would be one way to do this project.
+
+Add snapshots to a file system, so that a user can look at the file system as it appeared at various points in the past. You'll probably want to use some kind of copy-on-write for disk storage to keep space consumption down. 
+
+Implement mmap() of files for JOS or xv6.

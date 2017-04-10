@@ -1,0 +1,36 @@
+﻿Introduction:
+- What is paging?
+- Why use a paging system?
+- Why do we like paging systems? (well... used to like paging systems :P)
+
+First considerations:
+- Where on hard drive do our pages go?
+- Build simple system that can allocate N+1 pages
+  - Paging library
+  - Paging server
+
+Paging server:
+- Page out
+- Page in
+- Discard page
+- Get stats
+
+Paging library:
+- Wraps several syscalls to make them page
+  - Page alloc (biggest one, how to handle -E_NO_MEM?)
+  - Page map (handles mapping over or mapping from paged out pages)
+  - Page unmap (handles throwing away paged out pages)
+  - Others: have to “touch” any memory used, to trigger pgfault and page it back in if needed
+- Provide a page fault handler to page in if needed (small modification to pgfault system)
+
+Results: Efficiency vs Fairness
+- Step 1: Per-env linear choice – not very efficient or fair
+- Step 2: Per-env page-age choice – more efficient, not very fair
+- Step 3: Per-env page-age choice + kernel hard/soft limits – more efficient, more fair (still not ideal)
+- Step 4[Unimplemented]: Global page-age choice + kernel hard/soft limits – similar to how Linux actually does it. Problems: global paging is hard to do in exokernel style
+
+Conclusion: what we did, didn't do, and why
+- We achieved our goal of implementing a system which allowed us to allocate N+1 pages (and access them all again)
+- We built a system which measured the metrics we cared about (efficiency and fairness)
+- We built some heuristics which tried to achieve those metrics, though we fell slightly short due to the limitations of the exokernel model
+- Future work: implement a global paging system by granting the paging server env higher priveleges in sys_page_map (sufficient to access all other user pages and modify them).

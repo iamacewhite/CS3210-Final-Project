@@ -1,0 +1,11 @@
+- use existing page table to save indices of paged out pages, save space ??
+- Linux: map from page to environments that use it
+- if we allow one env to page out another's pages: fairness policy needed (least used page across system, or memory hogging env)
+- in theory, concurrency isn't an issue
+- (microkernel style?) make page server be in charge of unmapping
+- write benchmarks, think/test good scheme
+- lots of research done on this in the 60s
+
+Faculty's Feedback
+
+Good start on getting the mechanism for paging to work. To get an A or B, you should work out on some reasonable policy for page replacement and implement it. Make sure it handles running several applications well.

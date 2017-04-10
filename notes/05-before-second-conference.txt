@@ -1,0 +1,7 @@
+- Issue brought forth by Gary: what if we page out a page then try to sys_page_map it? This will just return an error, which means our paging is not transparen to the user
+  Solution:
+	- Have Envs keep track of mappings in a static location ("mapping directory").
+	- This will be like a page directory, so it points to other pages that act as "mapping tables".
+	- These pages need to be protected from paging out somehow -- we make our library check the mapping directory whenever it chooses to page out a page.
+	- The parent Env can then map this directory to check for a page being paged out (in paging.c -- wrapper around sys_page_map)
+

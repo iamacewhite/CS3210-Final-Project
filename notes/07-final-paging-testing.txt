@@ -1,0 +1,15 @@
+Date: 12/3/12
+Done:
+- Write some user programs to test the special cases for which we wrote checks in page_map and page_unmap:
+  (1) Mapping a page that was paged out.
+  (2) Mapping *over* a page that was paged out. <Punted>
+  (3) Unmapping a page that was paged out
+- Debug page_map and page_unmap
+Todo:
+- Merge in add_page_lib --> finalized base paging system (hopefully)
+- Think about LRU
+
+Page age:
+- Develop reverse map (linked list) from PageInfo structs to ptes
+- Implement kernel-side hook every N clock ticks to iterate through pages and look for PTE_A bits, update PageInfo structs to indicate this
+- Try implementing a couple of different ways to maintain age

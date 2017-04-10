@@ -1,0 +1,14 @@
+- fs/serv.c has umain, we can model our paging server off of fs
+- We should start working on a program that can break JOS in a way that will be fixed by our system. Preferrably several of these programs.
+- Syntax of paging server RPCs:
+  - (0) Page in (envid_t of child or current env, void *va)
+  - (1) Page out (envid_t of child or current env, void *va)
+- We should steal fs/ide.c, since it provides nice generic functions for writing to and reading from the hard drive
+- How to handle interactions between fs and paging servers?
+  - Have global lock on hard drive - YES, let's do this to start, maybe optimize later
+  - Somehow set up two hard drive drivers - NO
+
+Work for this session:
+Jordan -- started writing paging server code (modelling off of fs code)\
+Gary -- started writing user code that would break current JOS
+Gurtej -- started writing paging library

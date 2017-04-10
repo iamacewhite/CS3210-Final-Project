@@ -1,0 +1,7 @@
+Date: 12/08/12
+
+- Question at hand: how are we doing the global paging?
+(1) Use the kernel stats to give -E_NO_MEM to sys_page_allocs for certain environments sooner than others.
+(2) Use the paging server to globally look for less-used pages and page them out periodically.
+- Problem with (1) is that the kernel can only choose the current environment to page things out. Kernel can also only prevent environments from getting *more* pages, can't force page outs.
+- Answer: we have a while loop in the library currently, so what actually will happen (assuming the env uses the library code) is that the env will repeatedly get -E_NO_MEM and will page out several pages until it's below whatever threshold the environment set for it.

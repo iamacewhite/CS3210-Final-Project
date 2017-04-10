@@ -1,0 +1,260 @@
+<html>
+<head>
+  <title>6.828 Fall 2012: Final project</title>
+  <style type="text/css">
+    kbd {
+      color: #007700;
+      font-family: monospace;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>6.828 Fall 2012: Final project</h1>
+
+In the second half of the course you'll work on an operating systems
+project of your choice in teams of two or three. The goal is to have
+fun and explore more advanced O/S topics; you don't have to do
+novel research.
+
+<p>
+We'll grade you on how much you got working, how elegant your design
+is, how well you can explain it, and how interesting and creative your
+solution is. We do realize that time is limited, so we don't expect
+you to re-write Linux by the end of the semester. Try to make sure
+your goals are reasonable; perhaps set a minimum goal that's
+definitely achievable and a more ambitious goal if things go well.
+
+<h2>Schedule and Deliverables</h2>
+
+<ul>
+
+<li> Oct 19: Form groups of 2 to 3, e-mail us.
+
+<li> Oct 26: Submit a proposal at 
+<a href="http://pdos.csail.mit.edu/6.828/submit/project">
+the course website</a>, just a paragraph or two.
+
+<li> Week of Oct 29: first project conference with 6.828 faculty --
+we'll schedule a meeting with each team to discuss your proposal.
+
+<li> Weeks of Nov 21/26: second project conference.
+
+<li> Dec 7: submit source code along with a two-page write-up. 
+ Put the write-up under the top-level source directory with the
+name "<tt>README.pdf</tt>".
+
+<li> Week of Dec 10: final conference with faculty, with demonstration.
+
+<li> Week of Dec 10: short in-class demonstration.
+
+</ul>
+
+
+<h2>Submission repository</h2>
+
+Since most of you will be working in groups for this lab assignment,
+you may want to use git to share your project code between group members. 
+We have provided each group a shared repository on our submission server.
+After handing in your group proposal, you can access your group's 
+shared repository with this URL: 
+<tt>ssh://josgit@am.csail.mit.edu/project.git</tt>. 
+</p>
+
+<p>
+You will need to decide on whose source code you will use as a starting
+point for your group project. 
+That group member should run the following commands to place his or her
+JOS (or xv6) source code into the group repository.
+<pre>
+athena% <kbd>cd ~/6.828/lab</kbd>
+athena% <kbd>git remote add group ssh://josgit@am.csail.mit.edu/project.git</kbd>
+athena% <kbd>git checkout -b project</kbd>
+Switched to a new branch 'project'
+athena% <kbd>git push -u group project</kbd>
+Counting objects: 4343, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (3010/3010), done.
+Writing objects: 100% (4343/4343), 11.65 MiB | 1.53 MiB/s, done.
+Total 4343 (delta 1652), reused 3990 (delta 1329)
+To ssh://josgit@am.csail.mit.edu/project.git
+ * [new branch]      project -&gt; project
+ Branch project set up to track remote branch project from group.
+athena%
+</pre>
+</p>
+
+</p>
+The other members of your group can then checkouts the project from
+this shared group repository, as follows:
+<pre>
+athena% <kbd>git clone ssh://josgit@am.csail.mit.edu/project.git lab</kbd>
+Cloning into 'lab'...
+remote: Counting objects: 4346, done.
+remote: Compressing objects: 100% (2690/2690), done.
+remote: Total 4346 (delta 1654), reused 4343 (delta 1652)
+Receiving objects: 100% (4346/4346), 11.65 MiB | 2.68 MiB/s, done.
+Resolving deltas: 100% (1654/1654), done.
+warning: remote HEAD refers to nonexistent ref, unable to checkout.
+athena% <kbd>cd lab</kbd>
+athena% <kbd>git checkout project</kbd>
+Branch project set up to track remote branch project from origin.
+Switched to a new branch 'project'
+athena%
+</pre>
+</p>
+
+<p>
+At this point, all of your group members should be able to pull and push
+commits from the shared repository by running <kbd>git pull</kbd> and 
+<kbd>git push</kbd> on the <tt>project</tt> branch, respectively. 
+Pushing code to our repository is equivalent to submitting your project. 
+As before, you can submit as many times as you want. We always take
+the latest submission before the project deadline.
+</p>
+
+<p>
+Note that the shared project repository authenticate you using
+ the same public key that you have used to submit your previous labs.
+ If for some reason <kbd>git clone</kbd>, <kbd>git pull</kbd>
+ or <kbd>git push</kbd> promote for a password, 
+you can fix the problem by running <kbd>make handin-prep</kbd>
+in your JOS directory to update your public key with our submission server.
+</p>
+
+<p>
+Keep in mind that git only tracks files that you have explicitly committed, so
+you may want to run <kbd>git status</kbd> periodically to see if there are any
+lingering files in your checkout that you haven't committed. 
+
+You can use <kbd>git add <i>filename</i></kbd> to tell git about files you
+would like to commit with the next git commit command. If there are files that
+you will never want to commit, and you want to prevent them from showing up in
+the output of git status, you should create a file named <tt>.gitignore</tt> and
+add the filenames that you'd like <kbd>git status</kbd> to ignore to that file,
+one per line.
+
+</p>
+
+
+
+<h2>Ideas</h2>
+
+Here's a list of ideas to get you started thinking -- but you should
+feel free to pursue your own ideas.
+
+
+<ul>
+
+<li> Build a virtual machine monitor that can run multiple guests (for
+example, multiple instances of JOS), using
+<a href="http://www.intel.com/technology/itj/2006/v10i3/1-hardware/3-software.htm">x86 VM support</a>.
+
+<li> Do something useful with the x86 
+<a href="http://www.intel.com/content/dam/www/public/us/en/documents/technology-briefs/intel-trusted-execution-technology-software-dev-guide.pdf">Trusted
+Execution Technology</a>. For example, run applications without having
+to trust the kernel.
+<a href="https://www.usenix.org/system/files/conference/osdi12/osdi12-final-51.pdf">Here</a> is a recent paper on this topic.
+
+<li> Fix xv6 logging to support concurrent transactions, and generally
+have higher performance, perhaps taking ideas from Linux EXT3.
+
+<li> Use file system ideas from
+<a href="http://www.ece.cmu.edu/~ganger/papers/osdi94.pdf">Soft
+updates</a>,
+<a href="https://ng.gnunet.org/sites/default/files/10.1.1.40.3691.pdf">WAFL</a>,
+ZFS, or another advanced file system.
+
+<li> Add snapshots to a file system, so that a user can look at
+the file system as it appeared at various points in the past.
+You'll probably want to use some kind of copy-on-write for disk
+storage to keep space consumption down.
+
+<li> Implement
+<a href="readings/mazieres-hotos6.pdf">capabilities</a>
+to provide fine-grained control over what privileges processes have.
+
+<li> Build a
+<a href="http://www.cdf.toronto.edu/~csc469h/fall/handouts/nitzberg91.pdf">distributed shared memory</a> (DSM) system, so that you can run
+multi-threaded shared memory parallel programs on a cluster of
+machines, using paging to give the appearance of real shared memory.
+When a thread tries to access a page that's on another machine, the
+page fault will give the DSM system a chance to fetch the page over
+the network from whatever machine currently stores.
+
+<li> Layer software
+<a href="http://www.cs.cmu.edu/~garth/RAIDpaper/Patterson88.pdf">RAID-5</a> over an array of disks, to increase
+fault tolerance and performance.
+
+<li> Allow processes to migrate from one machine to another over
+the network. You'll need to do something about the various pieces
+of a process's state, such as file descriptors in xv6.
+
+<li> Implement <a href="http://en.wikipedia.org/wiki/Paging">paging</a> to disk
+  in xv6 or JOS, so that processes can be bigger than RAM. Extend your pager
+  with swapping.
+
+<li> Implement <a href="http://en.wikipedia.org/wiki/Mmap">mmap()</a> of files
+  for JOS or xv6.
+
+  <li> Implement <a href="http://en.wikipedia.org/wiki/Loadable_kernel_module">loadable kernel
+  modules</a> to extend the xv6 kernel to replace or extend subsystems of the
+  xv6 kernel.  For example, make the file system a kernel module so that you can
+  add a kernel module to read DOS file systems, or replace the xv6 file system.
+
+<li> Use <a href="http://static.usenix.org/event/osdi06/tech/erlingsson.html">xfi</a> to sandbox code within a process.
+
+<li> Support x86 <a href="http://en.wikipedia.org/wiki/Page_(computer_memory)">2MB or 4MB pages</a>.
+
+<li> Modify xv6 to have kernel-supported threads inside processes.  See <a
+  href="http://pdos.csail.mit.edu/6.828/2012/homework/xv6-uthread.html">in-class
+  uthread assignment</a> to get started.  Implementing scheduler activations
+  would be one way to do this project.
+
+<li> Implement ideas from the <a href="http://pdos.csail.mit.edu/6.828/2012/readings/engler95exokernel.pdf">Exokernel papers</a>, for example the packet filter.
+
+<li> Make JOS or xv6 have soft real-time behavior.  You will have to identify
+  some application for which this is useful.
+
+<li> Make JOS or xv6 run on 64-bit CPUs. This includes redoing the virtual
+  memory system to use 4-level pages tables. See <a
+  href="http://pdos.csail.mit.edu/6.828/2012/reference.html">reference page</a>
+  for some documentation.
+
+<li> Port JOS or xv6 to a different microprocessor.  The <a
+  href="http://wiki.osdev.org/Main_Page">osdev wiki</a> may be helpful.
+
+<li> A window system for xv6 or JOS, including graphics driver and mouse.  See
+  <a href="http://pdos.csail.mit.edu/6.828/2012/reference.html">reference
+  page</a> for some documentation.  <a
+  href="http://web.mit.edu/amdragon/www/pubs/sqrtx-6.828.html">sqrt(x)</a> is
+  an example JOS window system (and writeup).
+
+<li> Implement <a
+    href="https://www.usenix.org/system/files/conference/osdi12/osdi12-final-117.pdf">dune</a>
+   to export privileged hardware instructions to user-space applications in JOS
+   or xv6.
+
+<li> The linux kernel uses <a
+     href="http://en.wikipedia.org/wiki/Read-copy-update">read copy update</a>
+    to be able to perform read operations without holding locks.  Explore RCU by
+    implementing it in xv6 and use it to support a name cache with lock-free
+    reads
+
+<li> Intel recently announced <a
+    href="http://en.wikipedia.org/wiki/Transactional_Synchronization_Extensions">transactional
+   memory support</a> for its upcoming processors.  Implement support for
+   Intel's TSX in the QEMU emulator. A follow-on project would be to explore the
+   use of Intel TSX primitives in writing concurrent software, such as extending
+   a small multi-core operating system (based on 6.828's xv6) to use
+   transactional memory.
+
+<li> If you can't think of anything, it's OK to do <a
+ href="http://pdos.csail.mit.edu/6.828/2011/">the labs from 2011</a> that you
+have not already done (for example, the network stack).
+
+</ul>
+</body>
+</html>

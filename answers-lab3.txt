@@ -1,0 +1,54 @@
+Question 1. What is the purpose of having an individual handler function for each exception/interrupt? (i.e., if all exceptions/interrupts were delivered to the same handler, what feature that exists in the current implementation could not be provided?)
+
+Answer 1.
+The purpose of having an individual handler function for each exception/interrupt is so that the cpu can push the trap number onto the stack before calling trap().
+If all exceptions/interrupts were delivered to the same handler, the cpu could not push distinct trap numbers onto the stack before calling trap(),
+and the kernel code in trap() would not be able to distinguish between the different exceptions/interrupts.
+
+
+Question 2. Did you have to do anything to make the user/softint program behave correctly? The grade script expects it to produce a general protection fault (trap 13), but softint's code says int $14. Why should this produce interrupt vector 13? What happens if the kernel actually allows softint's int $14 instruction to invoke the kernel's page fault handler (which is interrupt vector 14)?
+
+Answer 2.
+
+To make the user/softint program behave correctly, all of the IDT gates have to be set with DPL = 0, to indicate that only the kernel is allowed to use them.
+In particular, int $14 (page fault) has a kernel Descriptor Privilege Level, which means that user code cannot successfully run int $14.
+When code with a particular privilege level tries to trigger an exception with a lower privilege level, a general protection fault (trap 13) is triggered instead, to handle the error of a piece of code violating privilege rules.
+
+If the kernel actually allows softint's int $14 instruction to invoke the kernel's page fault handler, the user could potentially be able to allocate itself more memory than the kernel wants it to have (if lazy page allocation is enabled via the page fault exception).
+
+
+Question 3. The break point test case will either generate a break point exception or a general protection fault depending on how you initialized the break point entry in the IDT (i.e., your call to SETGATE from trap_init). Why? How do you need to set it up in order to get the breakpoint exception to work as specified above and what incorrect setup would cause it to trigger a general protection fault?
+
+Answer 3.
+If the break point entry is set up in the IDT to only be available from kernel mode, then when this exception is triggered from user mode, a general protection fault is instead triggered because of the privilege level violation.
+If, on the other hand, the break point entry is set up in the IDT to be available from user mode, then this exception can be triggered successfully from user mode.
+
+
+Question 4. What do you think is the point of these mechanisms, particularly in light of what the user/softint test program does?
+
+Answer 4.
+We don't want the user to have arbitrary access to all 256 exception vectors.
+Only a few such functionalities (such as the break point exception) should be available to the user.
+The rest are protected by privilege levels.
+For if the user could access all the vectors, it could compromise the system.
+For example, in user/softint, the user tries to generate a page fault, which if successful would allocate additional physical memory for the process - something no user should be able to do from user mode.
+
+
+Challenge!
+I implemented the 1st challenge problem: cleaning up the similar code in trapentry.S and trap.c by changing the macros in trapentry.S to automatically generate a table for trap.c to use.
+
+In trapentry.S, I defined a data segment 'vectors' to store an alternating sequence of trap numbers and addresses to trap handlers. 
+So for any even i, vectors[i] would be a trap number, and vectors[i+1] would be the address of the trap handler for that trap number.
+In trap.c, we iterate through all possible vectors, and for each one that appears in an even position in vectors, we point that IDT entry at the address of that trap handler (which is the next entry in vectors after the vector).
+For every vector not appearing in vectors, we point the IDT entry at the address of the default trap handler.
+In this way, we have automated trap_init() in trap.c, such that the function is only a few lines long.
+
+I further cleaned up the code by automatically generating the data in vectors, rather than setting every piece of memory manually.
+Whenever TRAPHANDER is called, it stores a copy of the trap number and the the address of the trap handler in the vectors data segment of memory.
+
+I made one further simplification to TRAPHANDLER.
+Rather than being a two-argument macro that takes a handler name and a trap number,
+it is now a one-argument macro that takes a macro.
+When it needs the trap number, it uses the value of the macro, and when it needs a function name, it takes the name of the macro and appends '_HANDLER'.
+In this way, I didn't need to manually come up with names for all of the trap handler functions.
+This was taken care of automatically, and I only had to supply the already-defined T_ macros.
