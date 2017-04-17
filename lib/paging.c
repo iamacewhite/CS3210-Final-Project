@@ -19,7 +19,7 @@ find_paging_env()
 		pagingenv = ipc_find_env(ENV_TYPE_PAGE);
 }
 
-// The default page choice function, overridable by assigning page_choice
+// The default linear walk page choice function, overridable by assigning page_choice
 void *
 default_page_choice_func(envid_t env, void *pg_in)
 {
@@ -68,7 +68,7 @@ percentage_of_pgdir_to_walk(uint8_t age)
 }
 
 // Page choice function that pages out the environment page
-// which is the least used.
+// which is the least used. NFU with aging.
 // Doesn't actually choose the optimal page, as it would take a long time
 // to walk the entire page directory to find it.
 // Instead, we search through a percentage of the page directory,
@@ -127,54 +127,6 @@ environment_page_age_page_choice_func0(envid_t env, void *pg_in)
 	// that's guaranteed to be invalid
 	pgnum = 0;
 	return (void*)UTOP;
-
-	/*
-	static size_t pgdir_index = 0, pgtbl_index = 0;
-	static uint32_t nentries = UTOP / PGSIZE;
-	int pgdir_offset, pgtbl_offset;
-	int pgdir_actual_index, pgtbl_actual_index;
-	uint32_t pgnum, pgnum_opt = 0, num_searched_ptes = 0;
-
-	for (pgdir_offset = 0; pgdir_offset < NPDENTRIES; pgdir_offset++)
-	{
-		pgdir_actual_index = (pgdir_index + pgdir_offset)%NPDENTRIES;
-		if (pgdir_actual_index*PTSIZE < UTOP && uvpd[pgdir_actual_index] & PTE_P)
-			for (pgtbl_offset = 0; pgtbl_offset < NPTENTRIES; pgtbl_offset++)
-			{
-				++num_searched_ptes;
-				pgtbl_actual_index = (pgtbl_index + pgtbl_offset)%NPTENTRIES;
-				pgnum = pgdir_actual_index * NPTENTRIES + pgtbl_actual_index;
-
-				// Checks
-				if (pgnum*PGSIZE < (uintptr_t)end)
-					goto environment_page_age_page_choice_func0_ret;
-				if (!(pgnum*PGSIZE < USTACKTOP - PGSIZE) ||
-					!(uvpt[pgnum] & PTE_P) ||
-					(uvpt[pgnum] & PTE_SHARE) ||
-					(uvpt[pgnum] & PTE_NO_PAGE))
-					goto environment_page_age_page_choice_func0_ret;
-				if (pages[PGNUM(uvpt[pgnum])].pp_ref >= 2)
-					goto environment_page_age_page_choice_func0_ret;
-				if (age_opt > MAX_PAGE_AGE || pages[PGNUM(uvpt[pgnum])].age < age_opt) {
-					age_opt = pages[PGNUM(uvpt[pgnum])].age;
-					pgnum_opt = pgnum;
-					pct_to_walk = percentage_of_pgdir_to_walk(age_opt);
-				}
-environment_page_age_page_choice_func0_ret:
-				if (num_searched_ptes >= nentries*pct_to_walk) {
-					return (void*)(pgnum_opt*PGSIZE);
-				}
-			}
-	}
-
-	if (age_opt <= MAX_PAGE_AGE) {
-		return (void*)(pgnum_opt*PGSIZE);
-	}
-
-	// There are no valid pages to page out -- return an address
-	// that's guaranteed to be invalid
-	return (void*)UTOP;
-	*/
 }
 
 uint32_t state = 777;
@@ -259,10 +211,67 @@ random_page_choice_func(envid_t env, void *pg_in)
 	return (void*)UTOP;
 }
 
+void *
+nfu(envid_t env, void *pg_in)
+{
+	static uint32_t pgnum = 0;
+	static uint32_t nentries = UTOP / PGSIZE;
+	uint32_t pgnum_offset, pgnum_actual, pgnum_opt = 0, num_searched_ptes = 0;
+	uint8_t age_opt = MAX_PAGE_AGE + 1;
+	float pct_to_walk = 1.0f;
 
-void *(*page_choice_func)(envid_t env, void *pg_in) = random_page_choice_func;
-//void *(*page_choice_func)(envid_t env, void *pg_in) = environment_page_age_page_choice_func0;
+	for (pgnum_offset = 0; pgnum_offset < NPDENTRIES*NPTENTRIES; pgnum_offset++)
+	{
+		++num_searched_ptes;
+		// Calculate the actual pgnum
+		pgnum_actual = (pgnum + pgnum_offset)%(NPDENTRIES*NPTENTRIES);
+
+		// Check for the directory being present and UTOP
+		if (!(uvpd[pgnum_actual/NPTENTRIES] & PTE_P) || pgnum_actual >= PGNUM(UTOP))
+		{
+			pgnum_offset += (NPTENTRIES - pgnum_actual%NPTENTRIES) - 1;
+			continue;
+		}
+		// Checks
+		if (pgnum_actual*PGSIZE < (uintptr_t)end)
+			goto environment_page_age_page_choice_func0_ret;
+		if (!(pgnum_actual*PGSIZE < USTACKTOP - PGSIZE) ||
+		    !(uvpt[pgnum_actual] & PTE_P) ||
+		    (uvpt[pgnum_actual] & PTE_SHARE) ||
+		    (uvpt[pgnum_actual] & PTE_NO_PAGE))
+			goto environment_page_age_page_choice_func0_ret;
+		if (pages[PGNUM(uvpt[pgnum_actual])].pp_ref >= 2)
+			goto environment_page_age_page_choice_func0_ret;
+		if (age_opt > MAX_PAGE_AGE || pages[PGNUM(uvpt[pgnum_actual])].nfu_age < age_opt) {
+			age_opt = pages[PGNUM(uvpt[pgnum_actual])].nfu_age;
+			pgnum_opt = pgnum_actual;
+			pct_to_walk = percentage_of_pgdir_to_walk(age_opt);
+		}
+	environment_page_age_page_choice_func0_ret:
+		if (num_searched_ptes >= nentries*pct_to_walk) {
+			// cprintf("pgchoice: %x %d\n", pgnum_opt*PGSIZE, age_opt);
+			// Update pgnum
+			pgnum = pgnum_actual;
+			return (void*)(pgnum_opt*PGSIZE);
+		}
+	}
+
+	if (age_opt <= MAX_PAGE_AGE) {
+		// cprintf("pgchoice: %x %d\n", pgnum_opt*PGSIZE, age_opt);
+		return (void*)(pgnum_opt*PGSIZE);
+	}
+
+	// There are no valid pages to page out -- return an address
+	// that's guaranteed to be invalid
+	pgnum = 0;
+	return (void*)UTOP;
+}
+
+
+//void *(*page_choice_func)(envid_t env, void *pg_in) = random_page_choice_func;
+void *(*page_choice_func)(envid_t env, void *pg_in) = environment_page_age_page_choice_func0;
 //void *(*page_choice_func)(envid_t env, void *pg_in) = default_page_choice_func;
+//void *(*page_choice_func)(envid_t env, void *pg_in) = nfu;
 
 // Function to set the page choice function
 void

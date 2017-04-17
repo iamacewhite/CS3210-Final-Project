@@ -71,3 +71,6 @@ run_qemu
 # linearpageinsmall + reverselinearpageinsmall
 fill_init "linearpageinsmall" "reverselinearpageinsmall"
 run_qemu
+
+fill_init "randompagein"
+run_qemu

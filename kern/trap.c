@@ -276,6 +276,7 @@ trap_dispatch(struct Trapframe *tf)
 				if (*pp_refs_chain->pc_pte & PTE_A) {
 					page_accessed = 1;
 					pages[page_to_age].age += PAGE_AGE_INCREMENT_ON_ACCESS;
+                                        pages[page_to_age].nfu_age += PAGE_AGE_INCREMENT_ON_ACCESS;
 					for ( ; pp_refs_chain; pp_refs_chain = pp_refs_chain->pc_link) {
 						*(pp_refs_chain->pc_pte) &= ~PTE_A;
 					}
@@ -283,6 +284,7 @@ trap_dispatch(struct Trapframe *tf)
 				}
 			}
 			pages[page_to_age].age = (pages[page_to_age].age > MAX_PAGE_AGE ? MAX_PAGE_AGE : pages[page_to_age].age);
+			pages[page_to_age].nfu_age = (pages[page_to_age].nfu_age > MAX_PAGE_AGE ? MAX_PAGE_AGE : pages[page_to_age].nfu_age);
 			if (!page_accessed) {
 				if (pages[page_to_age].age >= (uint8_t)PAGE_AGE_DECREMENT_ON_CLOCK) {
 					pages[page_to_age].age -= (uint8_t)PAGE_AGE_DECREMENT_ON_CLOCK;
