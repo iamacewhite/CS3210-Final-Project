@@ -66,11 +66,14 @@ run_qemu ()
 
 # zigzag
 fill_init "zigzag"
-run_qemu
+time run_qemu
 
 # linearpageinsmall + reverselinearpageinsmall
-fill_init "linearpageinsmall" "reverselinearpageinsmall"
-run_qemu
+fill_init "linearpageinsmall"
+time run_qemu
+
+fill_init "reverselinearpageinsmall"
+time run_qemu
 
 fill_init "randompagein"
-run_qemu
+time run_qemu
