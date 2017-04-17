@@ -1,0 +1,187 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ASM	string.c	9;"	d	file:
+BUFLEN	readline.c	4;"	d	file:
+FDTABLE	fd.c	8;"	d	file:
+FILEDATA	fd.c	11;"	d	file:
+INDEX2DATA	fd.c	16;"	d	file:
+INDEX2FD	fd.c	14;"	d	file:
+MAXFD	fd.c	6;"	d	file:
+PIPEBUFSIZ	pipe.c	20;"	d	file:
+PTE_COW	fork.c	8;"	d	file:
+Pipe	pipe.c	/^struct Pipe {$/;"	s	file:
+UTEMP2	spawn.c	5;"	d	file:
+UTEMP2USTACK	spawn.c	4;"	d	file:
+UTEMP3	spawn.c	6;"	d	file:
+_panic	panic.c	/^_panic(const char *file, int line, const char *fmt, ...)$/;"	f
+_pgfault_handler	pgfault.c	/^void (*_pgfault_handler)(struct UTrapframe *utf);$/;"	v
+_pgfault_handler_wrapper	pgfault.c	/^void _pgfault_handler_wrapper(struct UTrapframe *utf){$/;"	f
+_pgfault_handlers	pgfault.c	/^int (*_pgfault_handlers[MAX_PGFAULT_HANDLERS])(struct UTrapframe *utf);$/;"	v
+_pgfault_upcall	pfentry.S	/^_pgfault_upcall:$/;"	l
+_pipeisclosed	pipe.c	/^_pipeisclosed(struct Fd *fd, struct Pipe *p)$/;"	f	file:
+_start	entry.S	/^_start:$/;"	l
+add_pgfault_handler	pgfault.c	/^add_pgfault_handler(int (*handler)(struct UTrapframe *utf))$/;"	f
+argnext	args.c	/^argnext(struct Argstate *args)$/;"	f
+argnextvalue	args.c	/^argnextvalue(struct Argstate *args)$/;"	f
+args_exist	entry.S	/^args_exist:$/;"	l
+argstart	args.c	/^argstart(int *argc, char **argv, struct Argstate *args)$/;"	f
+argvalue	args.c	/^argvalue(struct Argstate *args)$/;"	f
+binaryname	libmain.c	/^const char *binaryname = "<unknown>";$/;"	v
+buf	fprintf.c	/^	char buf[256];$/;"	m	struct:printbuf	file:
+buf	printf.c	/^	char buf[256];$/;"	m	struct:printbuf	file:
+buf	printfmt.c	/^	char *buf;$/;"	m	struct:sprintbuf	file:
+buf	readline.c	/^static char buf[BUFLEN];$/;"	v	file:
+close	fd.c	/^close(int fdnum)$/;"	f
+close_all	fd.c	/^close_all(void)$/;"	f
+cnt	printf.c	/^	int cnt;	\/\/ total bytes printed so far$/;"	m	struct:printbuf	file:
+cnt	printfmt.c	/^	int cnt;$/;"	m	struct:sprintbuf	file:
+copy_shared_pages	spawn.c	/^copy_shared_pages(envid_t child)$/;"	f	file:
+cprintf	printf.c	/^cprintf(const char *fmt, ...)$/;"	f
+cputchar	console.c	/^cputchar(int ch)$/;"	f
+debug	fd.c	3;"	d	file:
+debug	file.c	5;"	d	file:
+debug	pipe.c	3;"	d	file:
+default_page_choice_func	paging.c	/^default_page_choice_func(envid_t env, void *pg_in)$/;"	f
+dev_lookup	fd.c	/^dev_lookup(int dev_id, struct Dev **dev)$/;"	f
+devcons	console.c	/^struct Dev devcons =$/;"	v	typeref:struct:Dev
+devcons_close	console.c	/^devcons_close(struct Fd *fd)$/;"	f	file:
+devcons_read	console.c	/^devcons_read(struct Fd *fd, void *vbuf, size_t n)$/;"	f	file:
+devcons_stat	console.c	/^devcons_stat(struct Fd *fd, struct Stat *stat)$/;"	f	file:
+devcons_write	console.c	/^devcons_write(struct Fd *fd, const void *vbuf, size_t n)$/;"	f	file:
+devfile	file.c	/^struct Dev devfile =$/;"	v	typeref:struct:Dev
+devfile_flush	file.c	/^devfile_flush(struct Fd *fd)$/;"	f	file:
+devfile_read	file.c	/^devfile_read(struct Fd *fd, void *buf, size_t n)$/;"	f	file:
+devfile_stat	file.c	/^devfile_stat(struct Fd *fd, struct Stat *st)$/;"	f	file:
+devpipe	pipe.c	/^struct Dev devpipe =$/;"	v	typeref:struct:Dev
+devpipe_close	pipe.c	/^devpipe_close(struct Fd *fd)$/;"	f	file:
+devpipe_read	pipe.c	/^devpipe_read(struct Fd *fd, void *vbuf, size_t n)$/;"	f	file:
+devpipe_stat	pipe.c	/^devpipe_stat(struct Fd *fd, struct Stat *stat)$/;"	f	file:
+devpipe_write	pipe.c	/^devpipe_write(struct Fd *fd, const void *vbuf, size_t n)$/;"	f	file:
+devtab	fd.c	/^static struct Dev *devtab[] =$/;"	v	typeref:struct:Dev	file:
+dup	fd.c	/^dup(int oldfdnum, int newfdnum)$/;"	f
+duppage	fork.c	/^duppage(envid_t envid, unsigned pn)$/;"	f	file:
+ebuf	printfmt.c	/^	char *ebuf;$/;"	m	struct:sprintbuf	file:
+environment_page_age_page_choice_func0	paging.c	/^environment_page_age_page_choice_func0(envid_t env, void *pg_in)$/;"	f
+error	fprintf.c	/^	int error;	\/\/ first error that occurred$/;"	m	struct:printbuf	file:
+error_string	printfmt.c	/^static const char * const error_string[MAXERROR] =$/;"	v	file:
+exit	exit.c	/^exit(void)$/;"	f
+fd	fprintf.c	/^	int fd;		\/\/ file descriptor$/;"	m	struct:printbuf	file:
+fd2data	fd.c	/^fd2data(struct Fd *fd)$/;"	f
+fd2num	fd.c	/^fd2num(struct Fd *fd)$/;"	f
+fd_alloc	fd.c	/^fd_alloc(struct Fd **fd_store)$/;"	f
+fd_close	fd.c	/^fd_close(struct Fd *fd, bool must_exist)$/;"	f
+fd_lookup	fd.c	/^fd_lookup(int fdnum, struct Fd **fd_store)$/;"	f
+find_paging_env	paging.c	/^find_paging_env()$/;"	f
+find_unused_page	malloc.c	/^find_unused_page()$/;"	f
+fork	fork.c	/^fork(void)$/;"	f
+fprintf	fprintf.c	/^fprintf(int fd, const char *fmt, ...)$/;"	f
+free	malloc.c	/^void free(void *va) {$/;"	f
+fsipc	file.c	/^fsipc(unsigned type, void *dstva)$/;"	f	file:
+fsipcbuf	file.c	/^union Fsipc fsipcbuf __attribute__((aligned(PGSIZE)));$/;"	v	typeref:union:Fsipc
+fstat	fd.c	/^fstat(int fdnum, struct Stat *stat)$/;"	f
+ftruncate	fd.c	/^ftruncate(int fdnum, off_t newsize)$/;"	f
+get_and_print_paging_stats	paging.c	/^get_and_print_paging_stats()$/;"	f
+get_page_choice	paging.c	/^get_page_choice(envid_t env, void *pg_in)$/;"	f
+get_paging_stats	paging.c	/^get_paging_stats()$/;"	f
+getchar	console.c	/^getchar(void)$/;"	f
+getint	printfmt.c	/^getint(va_list *ap, int lflag)$/;"	f	file:
+getuint	printfmt.c	/^getuint(va_list *ap, int lflag)$/;"	f	file:
+idx	fprintf.c	/^	int idx;	\/\/ current buffer index$/;"	m	struct:printbuf	file:
+idx	printf.c	/^	int idx;	\/\/ current buffer index$/;"	m	struct:printbuf	file:
+init_map_dir	paging.c	/^init_map_dir()$/;"	f
+init_stack	spawn.c	/^init_stack(envid_t child, const char **argv, uintptr_t *init_esp)$/;"	f	file:
+ipc_find_env	ipc.c	/^ipc_find_env(enum EnvType type)$/;"	f
+ipc_recv	ipc.c	/^ipc_recv(envid_t *from_env_store, void *pg, int *perm_store)$/;"	f
+ipc_send	ipc.c	/^ipc_send(envid_t to_env, uint32_t val, void *pg, int perm)$/;"	f
+ipc_try_recv	ipc.c	/^ipc_try_recv(envid_t *from_env_store, void *pg, int *perm_store)$/;"	f
+iscons	console.c	/^iscons(int fdnum)$/;"	f
+libmain	libmain.c	/^libmain(int argc, char **argv)$/;"	f
+malloc	malloc.c	/^void *malloc() {$/;"	f
+map_segment	spawn.c	/^map_segment(envid_t child, uintptr_t va, size_t memsz,$/;"	f	file:
+memcmp	string.c	/^memcmp(const void *v1, const void *v2, size_t n)$/;"	f
+memcpy	string.c	/^memcpy(void *dst, const void *src, size_t n)$/;"	f
+memfind	string.c	/^memfind(const void *s, int c, size_t n)$/;"	f
+memmove	string.c	/^memmove(void *dst, const void *src, size_t n)$/;"	f
+memset	string.c	/^memset(void *v, int c, size_t n)$/;"	f
+num_pgfault_handlers	pgfault.c	/^size_t num_pgfault_handlers=0;$/;"	v
+open	file.c	/^open(const char *path, int mode)$/;"	f
+opencons	console.c	/^opencons(void)$/;"	f
+p_buf	pipe.c	/^	uint8_t p_buf[PIPEBUFSIZ];	\/\/ data buffer$/;"	m	struct:Pipe	file:
+p_rpos	pipe.c	/^	off_t p_rpos;		\/\/ read position$/;"	m	struct:Pipe	file:
+p_wpos	pipe.c	/^	off_t p_wpos;		\/\/ write position$/;"	m	struct:Pipe	file:
+page_alloc	paging.c	/^page_alloc(envid_t env, void *pg, int perm, int check_mte)$/;"	f
+page_choice_func	paging.c	/^void *(*page_choice_func)(envid_t env, void *pg_in) = environment_page_age_page_choice_func0;$/;"	v
+page_in	paging.c	/^page_in(envid_t env, void *addr)$/;"	f
+page_map	paging.c	/^page_map(envid_t srcenvid, void *srcva,$/;"	f
+page_out	paging.c	/^page_out(envid_t env, void *pg_in)$/;"	f
+page_unmap	paging.c	/^page_unmap(envid_t envid, void *va)$/;"	f
+pageref	pageref.c	/^pageref(void *v)$/;"	f
+paging_pgfault_handler	paging.c	/^paging_pgfault_handler(struct UTrapframe *utf)$/;"	f
+pagingenv	paging.c	/^static envid_t pagingenv = 0;$/;"	v	file:
+percentage_of_pgdir_to_walk	paging.c	/^percentage_of_pgdir_to_walk(uint8_t age)$/;"	f
+pgfault	fork.c	/^pgfault(struct UTrapframe *utf)$/;"	f	file:
+pipe	pipe.c	/^pipe(int pfd[2])$/;"	f
+pipeisclosed	pipe.c	/^pipeisclosed(int fdnum)$/;"	f
+print_paging_stats	paging.c	/^print_paging_stats(struct Pageret_stat *stats)$/;"	f
+printbuf	fprintf.c	/^struct printbuf {$/;"	s	file:
+printbuf	printf.c	/^struct printbuf {$/;"	s	file:
+printf	fprintf.c	/^printf(const char *fmt, ...)$/;"	f
+printfmt	printfmt.c	/^printfmt(void (*putch)(int, void*), void *putdat, const char *fmt, ...)$/;"	f
+printnum	printfmt.c	/^printnum(void (*putch)(int, void*), void *putdat,$/;"	f	file:
+putch	fprintf.c	/^putch(int ch, void *thunk)$/;"	f	file:
+putch	printf.c	/^putch(int ch, struct printbuf *b)$/;"	f	file:
+read	fd.c	/^read(int fdnum, void *buf, size_t n)$/;"	f
+readline	readline.c	/^readline(const char *prompt)$/;"	f
+readn	fd.c	/^readn(int fdnum, void *buf, size_t n)$/;"	f
+result	fprintf.c	/^	ssize_t result;	\/\/ accumulated results from write$/;"	m	struct:printbuf	file:
+seek	fd.c	/^seek(int fdnum, off_t offset)$/;"	f
+set_page_choice_func	paging.c	/^set_page_choice_func(void *(*pgchc_func)(envid_t env, void *pg_in))$/;"	f
+set_pgfault_handler	pgfault.c	/^set_pgfault_handler(void (*handler)(struct UTrapframe *utf))$/;"	f
+sfork	fork.c	/^sfork(void)$/;"	f
+snprintf	printfmt.c	/^snprintf(char *buf, int n, const char *fmt, ...)$/;"	f
+spawn	spawn.c	/^spawn(const char *prog, const char **argv)$/;"	f
+spawnl	spawn.c	/^spawnl(const char *prog, const char *arg0, ...)$/;"	f
+sprintbuf	printfmt.c	/^struct sprintbuf {$/;"	s	file:
+sprintputch	printfmt.c	/^sprintputch(int ch, struct sprintbuf *b)$/;"	f	file:
+stat	fd.c	/^stat(const char *path, struct Stat *stat)$/;"	f
+strcat	string.c	/^strcat(char *dst, const char *src)$/;"	f
+strchr	string.c	/^strchr(const char *s, char c)$/;"	f
+strcmp	string.c	/^strcmp(const char *p, const char *q)$/;"	f
+strcpy	string.c	/^strcpy(char *dst, const char *src)$/;"	f
+strfind	string.c	/^strfind(const char *s, char c)$/;"	f
+strisl	string.c	/^strisl(const char *s, int base, long *num)$/;"	f
+strlcpy	string.c	/^strlcpy(char *dst, const char *src, size_t size)$/;"	f
+strlen	string.c	/^strlen(const char *s)$/;"	f
+strncmp	string.c	/^strncmp(const char *p, const char *q, size_t n)$/;"	f
+strncpy	string.c	/^strncpy(char *dst, const char *src, size_t size) {$/;"	f
+strnlen	string.c	/^strnlen(const char *s, size_t size)$/;"	f
+strtol	string.c	/^strtol(const char *s, char **endptr, int base)$/;"	f
+sys_cgetc	syscall.c	/^sys_cgetc(void)$/;"	f
+sys_cputs	syscall.c	/^sys_cputs(const char *s, size_t len)$/;"	f
+sys_env_destroy	syscall.c	/^sys_env_destroy(envid_t envid)$/;"	f
+sys_env_set_pgfault_upcall	syscall.c	/^sys_env_set_pgfault_upcall(envid_t envid, void *upcall)$/;"	f
+sys_env_set_status	syscall.c	/^sys_env_set_status(envid_t envid, int status)$/;"	f
+sys_env_set_trapframe	syscall.c	/^sys_env_set_trapframe(envid_t envid, struct Trapframe *tf)$/;"	f
+sys_getenvid	syscall.c	/^sys_getenvid(void)$/;"	f
+sys_ipc_recv	syscall.c	/^sys_ipc_recv(void *dstva)$/;"	f
+sys_ipc_send	syscall.c	/^sys_ipc_send(envid_t envid, uint32_t value, void *srcva, int perm)$/;"	f
+sys_ipc_try_recv	syscall.c	/^sys_ipc_try_recv(void *dstva)$/;"	f
+sys_page_alloc	syscall.c	/^sys_page_alloc(envid_t envid, void *va, int perm)$/;"	f
+sys_page_map	syscall.c	/^sys_page_map(envid_t srcenv, void *srcva, envid_t dstenv, void *dstva, int perm)$/;"	f
+sys_page_unmap	syscall.c	/^sys_page_unmap(envid_t envid, void *va)$/;"	f
+sys_yield	syscall.c	/^sys_yield(void)$/;"	f
+syscall	syscall.c	/^syscall(int num, int check, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)$/;"	f	file:
+thisenv	libmain.c	/^const volatile struct Env *thisenv;$/;"	v	typeref:struct:Env
+touch_mem	syscall.c	/^void touch_mem(const void *va, size_t length){$/;"	f
+umapdir_walk	paging.c	/^umapdir_walk(const void *va, int create)$/;"	f
+vcprintf	printf.c	/^vcprintf(const char *fmt, va_list ap)$/;"	f
+vfprintf	fprintf.c	/^vfprintf(int fd, const char *fmt, va_list ap)$/;"	f
+vprintfmt	printfmt.c	/^vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)$/;"	f
+vsnprintf	printfmt.c	/^vsnprintf(char *buf, int n, const char *fmt, va_list ap)$/;"	f
+wait	wait.c	/^wait(envid_t envid)$/;"	f
+write	fd.c	/^write(int fdnum, const void *buf, size_t n)$/;"	f
+writebuf	fprintf.c	/^writebuf(struct printbuf *b)$/;"	f	file:

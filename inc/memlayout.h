@@ -191,6 +191,7 @@ struct PageInfo {
 
 	uint8_t age;
         uint8_t nfu_age;
+	long long timestamp;
 	// refs is a linked list of pte_chain structs which keeps
 	// track of all mappings which reference this physical page
 

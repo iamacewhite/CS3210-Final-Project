@@ -268,10 +268,58 @@ nfu(envid_t env, void *pg_in)
 }
 
 
+void *
+lru(envid_t env, void *pg_in)
+{
+	static uint32_t pgnum = 0;
+	static uint32_t nentries = UTOP / PGSIZE;
+	uint32_t pgnum_offset, pgnum_actual, pgnum_opt = 0, num_searched_ptes = 0;
+	long long time_min = 9223372036854775807;
+	float pct_to_walk = 1.0f;
+
+	for (pgnum_offset = 0; pgnum_offset < NPDENTRIES*NPTENTRIES; pgnum_offset++)
+	{
+		++num_searched_ptes;
+		// Calculate the actual pgnum
+		pgnum_actual = (pgnum + pgnum_offset)%(NPDENTRIES*NPTENTRIES);
+
+		// Check for the directory being present and UTOP
+		if (!(uvpd[pgnum_actual/NPTENTRIES] & PTE_P) || pgnum_actual >= PGNUM(UTOP))
+		{
+			pgnum_offset += (NPTENTRIES - pgnum_actual%NPTENTRIES) - 1;
+			continue;
+		}
+		// Checks
+		if (pgnum_actual*PGSIZE < (uintptr_t)end)
+			goto environment_page_age_page_choice_func0_ret;
+		if (!(pgnum_actual*PGSIZE < USTACKTOP - PGSIZE) ||
+		    !(uvpt[pgnum_actual] & PTE_P) ||
+		    (uvpt[pgnum_actual] & PTE_SHARE) ||
+		    (uvpt[pgnum_actual] & PTE_NO_PAGE))
+			goto environment_page_age_page_choice_func0_ret;
+		if (pages[PGNUM(uvpt[pgnum_actual])].pp_ref >= 2)
+			goto environment_page_age_page_choice_func0_ret;
+		if (pages[PGNUM(uvpt[pgnum_actual])].timestamp <= time_min) {
+			time_min = pages[PGNUM(uvpt[pgnum_actual])].timestamp;
+			pgnum_opt = pgnum_actual;
+		}
+	environment_page_age_page_choice_func0_ret:
+		if (num_searched_ptes >= nentries*pct_to_walk) {
+			// cprintf("pgchoice: %x %d\n", pgnum_opt*PGSIZE, age_opt);
+			// Update pgnum
+			pgnum = pgnum_actual;
+			return (void*)(pgnum_opt*PGSIZE);
+		}
+	}
+
+	return (void*)(pgnum_opt*PGSIZE);
+
+}
 //void *(*page_choice_func)(envid_t env, void *pg_in) = random_page_choice_func;
-void *(*page_choice_func)(envid_t env, void *pg_in) = environment_page_age_page_choice_func0;
+//void *(*page_choice_func)(envid_t env, void *pg_in) = environment_page_age_page_choice_func0;
 //void *(*page_choice_func)(envid_t env, void *pg_in) = default_page_choice_func;
 //void *(*page_choice_func)(envid_t env, void *pg_in) = nfu;
+void *(*page_choice_func)(envid_t env, void *pg_in) = lru;
 
 // Function to set the page choice function
 void

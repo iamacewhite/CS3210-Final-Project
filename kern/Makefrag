@@ -7,7 +7,7 @@
 
 OBJDIRS += kern
 
-KERN_LDFLAGS := $(LDFLAGS) -T kern/kernel.ld -nostdlib
+KERN_LDFLAGS := $(LDFLAGS) -T kern/kernel.ld 
 
 # entry.S must be first, so that it's the first code in the text segment!!!
 #
@@ -119,17 +119,17 @@ KERN_BINFILES := $(patsubst %, $(OBJDIR)/%, $(KERN_BINFILES))
 $(OBJDIR)/kern/%.o: kern/%.c $(OBJDIR)/.vars.KERN_CFLAGS
 	@echo + cc $<
 	@mkdir -p $(@D)
-	$(V)$(CC) -nostdinc $(KERN_CFLAGS) -c -o $@ $<
+	$(V)$(CC) $(KERN_CFLAGS) -c -o $@ $<
 
 $(OBJDIR)/kern/%.o: kern/%.S $(OBJDIR)/.vars.KERN_CFLAGS
 	@echo + as $<
 	@mkdir -p $(@D)
-	$(V)$(CC) -nostdinc $(KERN_CFLAGS) -c -o $@ $<
+	$(V)$(CC) $(KERN_CFLAGS) -c -o $@ $<
 
 $(OBJDIR)/kern/%.o: lib/%.c $(OBJDIR)/.vars.KERN_CFLAGS
 	@echo + cc $<
 	@mkdir -p $(@D)
-	$(V)$(CC) -nostdinc $(KERN_CFLAGS) -c -o $@ $<
+	$(V)$(CC) $(KERN_CFLAGS) -c -o $@ $<
 
 # Special flags for kern/init
 $(OBJDIR)/kern/init.o: override KERN_CFLAGS+=$(INIT_CFLAGS)

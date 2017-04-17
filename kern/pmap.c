@@ -339,6 +339,7 @@ page_init(void)
 		pages[i].pp_ref = 0;
 		pages[i].age = PAGE_AGE_INITIAL;
                 pages[i].nfu_age = 0;
+		pages[i].timestamp = 9223372036854775807;
 		// Add this page to page_free_list in any of these cases:
 		//  2) the address is in base memory [PGSIZE, npages_basemem * PGSIZE)
 		//  4) the address is in extended memory [EXTPHYSMEM, ...)

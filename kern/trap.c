@@ -2,7 +2,7 @@
 #include <inc/x86.h>
 #include <inc/assert.h>
 #include <inc/page.h>
-
+#include <sys/time.h>
 #include <kern/pmap.h>
 #include <kern/trap.h>
 #include <kern/console.h>
@@ -15,6 +15,7 @@
 #include <kern/cpu.h>
 #include <kern/spinlock.h>
 #include <kern/reversemap.h>
+
 
 static struct Taskstate ts;
 
@@ -32,6 +33,7 @@ struct Pseudodesc idt_pd = {
 	sizeof(idt) - 1, (uint32_t) idt
 };
 
+static long long counter = 0;
 
 static const char *trapname(int trapno)
 {
@@ -277,6 +279,8 @@ trap_dispatch(struct Trapframe *tf)
 					page_accessed = 1;
 					pages[page_to_age].age += PAGE_AGE_INCREMENT_ON_ACCESS;
                                         pages[page_to_age].nfu_age += PAGE_AGE_INCREMENT_ON_ACCESS;
+					pages[page_to_age].timestamp = counter;
+					counter++;
 					for ( ; pp_refs_chain; pp_refs_chain = pp_refs_chain->pc_link) {
 						*(pp_refs_chain->pc_pte) &= ~PTE_A;
 					}
