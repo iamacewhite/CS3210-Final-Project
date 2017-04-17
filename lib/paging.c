@@ -2,10 +2,11 @@
 
 #include <inc/lib.h>
 #include <inc/page.h>
-
+#include <inc/stdio.h>
 
 static envid_t pagingenv = 0;
 extern char end[];
+
 
 void init_map_dir();
 
@@ -176,7 +177,91 @@ environment_page_age_page_choice_func0_ret:
 	*/
 }
 
-void *(*page_choice_func)(envid_t env, void *pg_in) = environment_page_age_page_choice_func0;
+uint32_t state = 777;
+
+char myRand()
+{
+    state = state * 1664525 + 1013904223;
+    return state >> 24;
+}
+
+void *
+random_page_choice_func(envid_t env, void *pg_in)
+{
+	static uint32_t pgnum = 0;
+	uint32_t pgnum_offset, pgnum_actual;
+	uint32_t random_pgnum;
+
+	for (pgnum_offset = 0; pgnum_offset < NPDENTRIES*NPTENTRIES; pgnum_offset++)
+	{
+		// Calculate the actual pgnum
+		pgnum_actual = (pgnum + pgnum_offset)%(NPDENTRIES*NPTENTRIES);
+		// Check for the directory being present and UTOP
+		if (!(uvpd[pgnum_actual/NPTENTRIES] & PTE_P) || pgnum_actual >= PGNUM(UTOP))
+		{
+			pgnum_offset += (NPTENTRIES - pgnum_actual%NPTENTRIES) - 1;
+			continue;
+		}
+		// Checks (other)
+		if (pgnum_actual*PGSIZE < (uintptr_t)end)
+			continue;
+		if (!(pgnum_actual*PGSIZE < USTACKTOP - PGSIZE) ||
+		    !(uvpt[pgnum_actual] & PTE_P) ||
+		    (uvpt[pgnum_actual] & PTE_SHARE) ||
+		    (uvpt[pgnum_actual] & PTE_NO_PAGE))
+			continue;
+		if (pages[PGNUM(uvpt[pgnum_actual])].pp_ref >= 2)
+			continue;
+		
+		// Update pgnum
+		pgnum = pgnum_actual;
+		break;
+		//return (void*)(pgnum*PGSIZE);
+	}
+	random_pgnum = (myRand() % ((USTACKTOP-PGSIZE)/PGSIZE - pgnum)) + pgnum;
+	uint32_t counter = 0;
+	while(counter < 20)
+	{
+		counter++;
+		// Calculate the actual pgnum
+		//pgnum_actual = (pgnum + pgnum_offset)%(NPDENTRIES*NPTENTRIES);
+		// Check for the directory being present and UTOP
+		if (!(uvpd[random_pgnum/NPTENTRIES] & PTE_P) || random_pgnum >= PGNUM(UTOP))
+		{
+			pgnum_offset += (NPTENTRIES - random_pgnum%NPTENTRIES) - 1;
+			random_pgnum = (myRand() % ((USTACKTOP-PGSIZE)/PGSIZE - pgnum)) + pgnum;
+			continue;
+		}
+		// Checks (other)
+		if (random_pgnum*PGSIZE < (uintptr_t)end){
+			random_pgnum = (myRand() % ((USTACKTOP-PGSIZE)/PGSIZE - pgnum)) + pgnum;
+			continue;
+		}
+		if (!(random_pgnum*PGSIZE < USTACKTOP - PGSIZE) ||
+		    !(uvpt[random_pgnum] & PTE_P) ||
+		    (uvpt[random_pgnum] & PTE_SHARE) ||
+		    (uvpt[random_pgnum] & PTE_NO_PAGE)){
+			random_pgnum = (myRand() % ((USTACKTOP-PGSIZE)/PGSIZE - pgnum)) + pgnum	;		
+			continue;
+		}
+		if (pages[PGNUM(uvpt[random_pgnum])].pp_ref >= 2){
+			random_pgnum = (myRand() % ((USTACKTOP-PGSIZE)/PGSIZE - pgnum)) + pgnum	;		
+			continue;
+		}
+		// Update pgnum
+		//pgnum = pgnum_actual;
+		return (void*)(random_pgnum*PGSIZE);
+		
+	}
+	// There are no valid pages to page out -- return an address
+	// that's guaranteed to be invalid
+	pgnum = 0;
+	return (void*)UTOP;
+}
+
+
+void *(*page_choice_func)(envid_t env, void *pg_in) = random_page_choice_func;
+//void *(*page_choice_func)(envid_t env, void *pg_in) = environment_page_age_page_choice_func0;
 //void *(*page_choice_func)(envid_t env, void *pg_in) = default_page_choice_func;
 
 // Function to set the page choice function
