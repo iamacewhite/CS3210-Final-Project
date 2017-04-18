@@ -21,7 +21,7 @@ find_paging_env()
 
 // The default linear walk page choice function, overridable by assigning page_choice
 void *
-default_page_choice_func(envid_t env, void *pg_in)
+linear_walk(envid_t env, void *pg_in)
 {
 	static uint32_t pgnum = 0;
 	uint32_t pgnum_offset, pgnum_actual;
@@ -74,7 +74,7 @@ percentage_of_pgdir_to_walk(uint8_t age)
 // Instead, we search through a percentage of the page directory,
 // and choose the optimal page in that area.
 void *
-environment_page_age_page_choice_func0(envid_t env, void *pg_in)
+nfu_with_aging_page_choice_func(envid_t env, void *pg_in)
 {
 	static uint32_t pgnum = 0;
 	static uint32_t nentries = UTOP / PGSIZE;
@@ -96,20 +96,20 @@ environment_page_age_page_choice_func0(envid_t env, void *pg_in)
 		}
 		// Checks
 		if (pgnum_actual*PGSIZE < (uintptr_t)end)
-			goto environment_page_age_page_choice_func0_ret;
+			goto nfu_with_aging_page_choice_func_ret;
 		if (!(pgnum_actual*PGSIZE < USTACKTOP - PGSIZE) ||
 		    !(uvpt[pgnum_actual] & PTE_P) ||
 		    (uvpt[pgnum_actual] & PTE_SHARE) ||
 		    (uvpt[pgnum_actual] & PTE_NO_PAGE))
-			goto environment_page_age_page_choice_func0_ret;
+			goto nfu_with_aging_page_choice_func_ret;
 		if (pages[PGNUM(uvpt[pgnum_actual])].pp_ref >= 2)
-			goto environment_page_age_page_choice_func0_ret;
+			goto nfu_with_aging_page_choice_func_ret;
 		if (age_opt > MAX_PAGE_AGE || pages[PGNUM(uvpt[pgnum_actual])].age < age_opt) {
 			age_opt = pages[PGNUM(uvpt[pgnum_actual])].age;
 			pgnum_opt = pgnum_actual;
 			pct_to_walk = percentage_of_pgdir_to_walk(age_opt);
 		}
-	environment_page_age_page_choice_func0_ret:
+	nfu_with_aging_page_choice_func_ret:
 		if (num_searched_ptes >= nentries*pct_to_walk) {
 			// cprintf("pgchoice: %x %d\n", pgnum_opt*PGSIZE, age_opt);
 			// Update pgnum
@@ -316,10 +316,10 @@ lru(envid_t env, void *pg_in)
 
 }
 //void *(*page_choice_func)(envid_t env, void *pg_in) = random_page_choice_func;
-//void *(*page_choice_func)(envid_t env, void *pg_in) = environment_page_age_page_choice_func0;
-//void *(*page_choice_func)(envid_t env, void *pg_in) = default_page_choice_func;
+//void *(*page_choice_func)(envid_t env, void *pg_in) = nfu_with_aging_page_choice_func;
+void *(*page_choice_func)(envid_t env, void *pg_in) = linear_walk;
 //void *(*page_choice_func)(envid_t env, void *pg_in) = nfu;
-void *(*page_choice_func)(envid_t env, void *pg_in) = lru;
+//void *(*page_choice_func)(envid_t env, void *pg_in) = lru;
 
 // Function to set the page choice function
 void
