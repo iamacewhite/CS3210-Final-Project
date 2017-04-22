@@ -15,7 +15,7 @@ Project Write-up: In README.pdf
 -----------------
 Project Proposal:
 
-As we know, in JOS, the physical memory is limited to 4GB, which means the needed memory of a single process cannot exceed 4GB. One commonly implemented solution to the problem of limited memory is paging to disk. A paging system swaps memory pages between RAM and disk, allowing a process to use more memory than physically restricted. Since accessing permanent storage is much slower than accessing RAM, it is important for a good paging system to choose the right pages to swap out, or more specifically, to choose those pages that will rarely be used in the future. To accelerate this  swapping process, we will also modify the process scheduler so that it can coordinate with our paging system more smoothly.
+As we know, in JOS, the physical memory is limited to 256MB, which means the needed memory of a single process cannot exceed 256MB. One commonly implemented solution to the problem of limited memory is paging to disk. A paging system swaps memory pages between RAM and disk, allowing a process to use more memory than physically restricted. Since accessing permanent storage is much slower than accessing RAM, it is important for a good paging system to choose the right pages to swap out, or more specifically, to choose those pages that will rarely be used in the future. To accelerate this  swapping process, we will also modify the process scheduler so that it can coordinate with our paging system more smoothly.
 
 Paging to disk is widely used in different operating systems nowadays, and it has become a crucial feature in order to break the memory limit. In Unix and other Unix-like operating systems, it is common to dedicate an entire partition of a hard disk to swapping. Many systems even have an entire hard drive dedicated to swapping, separate from the data drives, containing only a swap partition. In terms of determining pages to be swapped out, which is one of our main focus, there are some existing page swapping selection heuristics, such as demand paging, anticipatory paging, etc.
 
@@ -33,3 +33,8 @@ Page heuristic here refer to the choice of choosing and evicting pages. The OS w
 To make comparison between different combinations of page heuristic and process scheduling algorithms, we need to implement a user program which is in charge of triggering page faults, therefore we can compare performance with some metric. A common baseline to evaluate our paging heuristic would be an existing one, e.g. the one on xv6.
 
 
+-----------------
+To test out this project, simply run
+'''
+$ ./paging-stats
+'''
