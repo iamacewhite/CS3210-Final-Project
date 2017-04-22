@@ -10,7 +10,7 @@ Team 1
 
 Project Title: Extend Paging System in JOS
 
-Project Write-up: In README.pdf
+Project Write-up: In CS3210FinalProjectWriteup.pdf
 
 -----------------
 Project Proposal:
