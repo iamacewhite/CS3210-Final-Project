@@ -35,6 +35,6 @@ To make comparison between different combinations of page heuristic and process 
 
 -----------------
 To test out this project, simply run
-'''
+```
 $ ./paging-stats
-'''
+```
